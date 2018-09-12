@@ -25,27 +25,27 @@ class ViewController: UIViewController {
     
     func prepareView() {
         bottomBar = BottomBar()
-        bottomBar.button.addTarget(self, action: #selector(self.bottomButtonTapped), forControlEvents: .TouchUpInside)
+        bottomBar.button.addTarget(self, action: #selector(self.bottomButtonTapped), for: .touchUpInside)
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(bottomBar)
         
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[bottomBar]-0-|", options: [], metrics: nil, views: ["bottomBar": bottomBar]))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bottomBar(\(BottomBar.bottomBarHeight))]-0-|", options: [], metrics: nil, views: ["bottomBar": bottomBar]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bottomBar]-0-|", options: [], metrics: nil, views: ["bottomBar": bottomBar]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bottomBar(\(BottomBar.bottomBarHeight))]-0-|", options: [], metrics: nil, views: ["bottomBar": bottomBar]))
         
         nextViewController = NextViewController()
         nextViewController.rootViewController = self
         nextViewController.transitioningDelegate = self
-        nextViewController.modalPresentationStyle = .FullScreen
+        nextViewController.modalPresentationStyle = .fullScreen
         
         presentInteractor = MiniToLargeViewInteractive()
-        presentInteractor.attachToViewController(self, withView: bottomBar, presentViewController: nextViewController)
+        presentInteractor.attachToViewController(viewController: self, withView: bottomBar, presentViewController: nextViewController)
         dismissInteractor = MiniToLargeViewInteractive()
-        dismissInteractor.attachToViewController(nextViewController, withView: nextViewController.view, presentViewController: nil)
+        dismissInteractor.attachToViewController(viewController: nextViewController, withView: nextViewController.view, presentViewController: nil)
     }
     
-    func bottomButtonTapped() {
+    @objc func bottomButtonTapped() {
         disableInteractivePlayerTransitioning = true
-        self.presentViewController(nextViewController, animated: true) { [unowned self] in
+        self.present(nextViewController, animated: true) { [unowned self] in
             self.disableInteractivePlayerTransitioning = false
         }
     }
@@ -68,12 +68,12 @@ extension ViewController: UIViewControllerTransitioningDelegate {
         return animator
     }
     
-    func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         guard !disableInteractivePlayerTransitioning else { return nil }
         return presentInteractor
     }
     
-    func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         guard !disableInteractivePlayerTransitioning else { return nil }
         return dismissInteractor
     }
