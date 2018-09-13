@@ -14,21 +14,21 @@ class NextViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.brownColor()
+        self.view.backgroundColor = UIColor.brown
         
         let button = UIButton()
-        button.setTitle("Dismiss", forState: .Normal)
-        button.addTarget(self, action: #selector(self.buttonTapped), forControlEvents: .TouchUpInside)
+        button.setTitle("Dismiss", for: .normal)
+        button.addTarget(self, action: #selector(self.buttonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(button)
         
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-6-[button]", options: [], metrics: nil, views: ["button": button]))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-20-[button]", options: [], metrics: nil, views: ["button": button]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-6-[button]", options: [], metrics: nil, views: ["button": button]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-20-[button]", options: [], metrics: nil, views: ["button": button]))
     }
     
-    func buttonTapped() {
+    @objc func buttonTapped() {
         rootViewController?.disableInteractivePlayerTransitioning = true
-        self.dismissViewControllerAnimated(true) { [unowned self] in
+        self.dismiss(animated: true) { [unowned self] in
             self.rootViewController?.disableInteractivePlayerTransitioning = false
         }
     }

@@ -23,15 +23,15 @@ class BottomBar: UIView {
     }
     
     func setupSubview() {
-        self.backgroundColor = UIColor.grayColor()
+        self.backgroundColor = UIColor.gray
         
         button = UIButton()
-        button.setTitle("Tap or drag me", forState: .Normal)
-        button.backgroundColor = UIColor.grayColor()
+        button.setTitle("Tap or drag me", for: .normal)
+        button.backgroundColor = UIColor.gray
         button.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(button)
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[button]-|", options: [], metrics: nil, views: ["button": button]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[button]-|", options: [], metrics: nil, views: ["button": button]))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[button]-|", options: [], metrics: nil, views: ["button": button]))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[button]-|", options: [], metrics: nil, views: ["button": button]))
     }
 }

@@ -20,19 +20,19 @@ class MiniToLargeViewInteractive: UIPercentDrivenInteractiveTransition {
     func attachToViewController(viewController: UIViewController, withView view: UIView, presentViewController: UIViewController?) {
         self.viewController = viewController
         self.presentViewController = presentViewController
-        pan = UIPanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
+        pan = UIPanGestureRecognizer(target: self, action: #selector(self.onPan(pan:)))
         view.addGestureRecognizer(pan)
     }
     
-    func onPan(pan: UIPanGestureRecognizer) {
-        let translation = pan.translationInView(pan.view?.superview)
+    @objc func onPan(pan: UIPanGestureRecognizer) {
+        let translation = pan.translation(in: pan.view?.superview)
         
         //Represents the percentage of the transition that must be completed before allowing to complete.
         let percentThreshold: CGFloat = 0.2
         //Represents the difference between progress that is required to trigger the completion of the transition.
         let automaticOverrideThreshold: CGFloat = 0.03
         
-        let screenHeight: CGFloat = UIScreen.mainScreen().bounds.size.height - BottomBar.bottomBarHeight
+        let screenHeight: CGFloat = UIScreen.main.bounds.size.height - BottomBar.bottomBarHeight
         let dragAmount: CGFloat = (presentViewController == nil) ? screenHeight : -screenHeight
         var progress: CGFloat = translation.y / dragAmount
         
@@ -40,14 +40,14 @@ class MiniToLargeViewInteractive: UIPercentDrivenInteractiveTransition {
         progress = fmin(progress, 1)
         
         switch pan.state {
-        case .Began:
+        case .began:
             if let presentViewController = presentViewController {
-                viewController?.presentViewController(presentViewController, animated: true, completion: nil)
+                viewController?.present(presentViewController, animated: true, completion: nil)
             } else {
-                viewController?.dismissViewControllerAnimated(true, completion: nil)
+                viewController?.dismiss(animated: true, completion: nil)
             }
             
-        case .Changed:
+        case .changed:
             guard let lastProgress = lastProgress else {return}
             
             // When swiping back
@@ -60,13 +60,13 @@ class MiniToLargeViewInteractive: UIPercentDrivenInteractiveTransition {
                 // Normal behavior
                 shouldComplete = progress > percentThreshold
             }
-            updateInteractiveTransition(progress)
+            update(progress)
             
-        case .Ended, .Cancelled:
-            if pan.state == .Cancelled || shouldComplete == false {
-                cancelInteractiveTransition()
+        case .ended, .cancelled:
+            if pan.state == .cancelled || shouldComplete == false {
+                cancel()
             } else {
-                finishInteractiveTransition()
+                finish()
             }
             
         default:
